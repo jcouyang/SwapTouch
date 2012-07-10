@@ -1,0 +1,365 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>LungoJS 1.2</title>
+    <meta name="description" content="">
+    <meta name="author" content="Jichao Ouyang">
+    <!-- Mobile viewport optimization http://goo.gl/b9SaQ -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta http-equiv="cleartype" content="on">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <!-- For iPhone 4 with high-resolution Retina display: -->
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="assets/images/icon@2x.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="assets/images/icon-72.png">
+    <link rel="apple-touch-icon-precomposed" href="assets/images/icon.png">
+    <link rel="apple-touch-startup-image" href="assets/images/default.png">
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="./lungo.js/lungo-1.2.css">
+    <link rel="stylesheet" href="./lungo.js/lungo.theme.default.css">
+    <style type="text/css">
+        .scroll-demo {
+        background: #ccc;
+        margin: 10px;
+        overflow: hidden;
+    }
+
+    .scroll-demo.horizontal {
+        height: 68px;
+        width: inherit;
+        display: block;
+    }
+
+    .scroll-demo.vertical {
+        top: 72px;
+        width: 72px;
+        height: 196px;
+    }
+
+    .scroll-demo span {
+        height: 64px;
+        width: 64px;
+        background: #666;
+        text-align: center;
+        line-height: 64px;
+        display: inline-block;
+        margin: 2px 0px 0px 2px;
+    }
+    </style>
+</head>
+
+<body class="app">
+    <section id="main">
+        <header data-title="换多多" class="extended">
+
+            <a href="#profile-aside" data-target="aside" data-icon="items" class="button onleft"></a>
+
+            <a href="#add" data-target="section" data-icon="plus" class="button onright"></a>
+            <nav class="groupbar">
+                <a href="#latest" data-target="article" class="current">最新上传</a>
+                <a href="#popular" data-target="article" >最受欢迎</a>
+            </nav>
+        </header>
+        <!--
+            List of offes
+        -->
+        <article id="latest" class="list scrollable">
+            <ul>
+                <li class=selectable>
+                    <a href="#detail" data-target="section" ><img src="http://lungojs.tapquo.com/assets/images/avatars/1.jpg">
+                    <strong>meow</strong>
+                    <small>anymeow</small></a>
+                </li>
+                <li class=selectable>
+                    <img src="http://lungojs.tapquo.com/assets/images/avatars/1.jpg">
+                    <strong>meow</strong>
+                    <small>anymeow</small>
+                </li>
+            </ul>
+        </article>
+
+        <article id="popular" class="list">
+            <ul>
+                <li>
+                    <img src="http://lungojs.tapquo.com/assets/images/avatars/1.jpg">
+                    <strong>meow</strong>
+                    <small>anymeow</small>
+                </li>
+                <li>
+                    <img src="http://lungojs.tapquo.com/assets/images/avatars/1.jpg">
+                    <strong>meow</strong>
+                    <small>anymeow</small>
+                </li>
+            </ul>
+        </article>
+        
+    </section>
+    
+    <section id="add">
+        <header data-back="home" data-title="添加宝贝"></header>
+        <article class="list">
+            
+            <div class="container indented">
+
+            <ul class="form">
+                <li>
+                    <label>标题*</label>
+                    <input type="text" placeholder="简单描述"/>
+                </li>
+                <li class="anchor" data-icon="edit">类目</li>
+                <li>
+
+                    <label class=select>
+                    <select>
+                        <option>one</option>
+                        <option>two</option>
+                    </select>
+                    </label>
+                </li>
+            </ul>
+            <ul class="form">
+                <li class="anchor" data-icon="edit">详情</li>
+                <li><textarea placeholder="宝贝详情"></textarea></li>
+                    
+            </ul>
+
+            <ul class="form">
+                <li class=anchor>想换</li>
+                 <li>   <textarea placeholder="理想宝贝"></textarea></li>
+            </ul>
+            </div>
+            <div id="offer-image-scroll" class="scroll-demo scrollable horizontal">
+                <div style="width: 1036px;">
+                    
+                    <span>2</span>
+                    <span>3</span>
+                    <span>4</span>
+                    <span>5</span>
+                    <span>6</span>
+                    <span>7</span>
+                    <span>8</span>
+                    <span>9</span>
+                    <span>10</span>
+                    <span>11</span>
+                    <span>12</span>
+                    <span>13</span>
+                    <span>14</span>
+                    <span>15</span>
+                </div>
+            </div>
+        </article>
+        <footer>
+            <nav class="onleft">
+                <a href="#" data-icon="pushpin"></a>
+                 <a href="#" data-icon="picture"></a>
+                  <a href="#" data-icon="camera"></a>
+            </nav>
+            <nav class="onright">
+                <a href="#" data-icon="check" class="button green">添加</a>
+            </nav>
+        </footer>
+    </section>
+
+    <section id="detail">
+        <header data-back="home" data-title="宝贝详情"></header>
+        <article class="list">
+            
+            <div class="container indented">
+
+            <ul class="form">
+                <li>
+
+                    <label><b>标题</b></label>
+
+                </li>
+            </ul>
+            <ul class="form">
+                <li class="anchor" data-icon="edit">详情</li>
+                <li>喵咪是是屎屎</li>
+                    
+            </ul>
+
+            <ul class="form">
+                <li class=anchor>想换</li>
+                 <li> 喵咪是是屎屎</li>
+            </ul>
+            </div>
+            <div id="offer-image-scroll2" class="scroll-demo scrollable horizontal">
+                <div style="width: 1036px;">
+                    <span>1</span>
+                    <span>2</span>
+                    <span>3</span>
+                    <span>4</span>
+                    <span>5</span>
+                    <span>6</span>
+                    <span>7</span>
+                    <span>8</span>
+                    <span>9</span>
+                    <span>10</span>
+                    <span>11</span>
+                    <span>12</span>
+                    <span>13</span>
+                    <span>14</span>
+                    <span>15</span>
+                </div>
+            </div>
+
+        </article>
+        <footer>
+
+            <nav class="onright">
+                <a href="#" data-icon="edit" class="button green">编辑</a>
+                <a href="#" data-icon="check" class="button green">想换</a>
+            </nav>
+        </footer>
+    </section>
+
+    <section id="myswap">
+        <header data-title="我的宝贝" class="extended" data-back="home">
+            <a href="#add" data-target="section" data-icon="plus" class="button onright"></a>
+            <nav class="groupbar">
+                <a href="#latest" data-target="article" class="current">最新上传</a>
+                <a href="#popular" data-target="article" >与我交换</a>
+                <a href="#popular" data-target="article" >我的交换</a>
+                <a href="#popular" data-target="article" >成功</a>
+                <a href="#popular" data-target="article" >失败</a>
+            </nav>
+        </header>
+        <!--
+            List of offes
+        -->
+        <article id="latest" class="list scrollable">
+            <ul>
+                <li class=selectable>
+                    <a href="#detail" data-target="section" ><img src="http://lungojs.tapquo.com/assets/images/avatars/1.jpg">
+                    <strong>meow</strong>
+                    <small>anymeow</small></a>
+                </li>
+                <li class=selectable>
+                    <img src="http://lungojs.tapquo.com/assets/images/avatars/1.jpg">
+                    <strong>meow</strong>
+                    <small>anymeow</small>
+                </li>
+            </ul>
+        </article>
+
+        <article id="popular" class="list">
+            <ul>
+                <li>
+                    <a href="#swapdetail" data-target="section">
+                    <img src="http://lungojs.tapquo.com/assets/images/avatars/1.jpg">
+                    <strong>meow</strong>
+                    <small>anymeow</small>
+                    </a>
+                </li>
+                <li>
+                    <img src="http://lungojs.tapquo.com/assets/images/avatars/1.jpg">
+                    <strong>meow</strong>
+                    <small>anymeow</small>
+                </li>
+            </ul>
+        </article>
+    </section>
+
+    <section id="swapdetail">
+        <header data-back="home" data-title="详情"></header>
+        <article class="list">
+            
+            <div class="container indented">
+
+            <ul class="form">
+                <li>
+
+                    <label><b>标题</b></label>
+
+                </li>
+            </ul>
+            <ul class="form">
+                <li class="anchor" data-icon="edit">用</li>
+                <li>喵咪是是屎屎</li>
+                <li class="anchor" data-icon="edit">换</li>
+                <li>喵咪是是屎</li>
+                    
+            </ul>
+            <ul class="form">
+                <li class="anchor" data-icon="edit">状态</li>
+                <li>喵咪是是屎屎</li>
+                <li class="anchor" data-icon="edit">时间</li>
+                <li>喵咪是是屎</li>
+                <li class="anchor" data-icon="edit">用户</li>
+                <li><img src="http://lungojs.tapquo.com/assets/images/avatars/1.jpg">
+                    <strong>meow</strong>
+                    <small>anymeow</small>
+                </li>
+            </ul>
+        </div>
+        </article>  
+    </section>
+    <section id="login">
+        <header data-title="登陆" data-back="home">
+            <a href="#register" class="button onright" data-target="section">注册</a>
+        </header>
+        <article class=list>
+            <ul class=form>
+                <li>
+                    <label>用户名</label>
+                    <input type="text"/>
+                </li>
+                <li>
+                    <label>密码</label>
+                    <input type="password"/>
+                </li>
+                <li><a href="#" class="button big green">登陆</a>
+                </li>
+            </ul>
+        </article>
+    </section>
+    <section id="register">
+        <header data-title="注册" data-back="home">
+            
+        </header>
+        <article class=list>
+            <ul class=form>
+                <li>
+                    <label>用户名</label>
+                    <input type="text"/>
+                </li>
+                <li>
+                    <label>密码</label>
+                    <input type="password"/>
+                </li>
+                <li>
+                    <label>邮箱</label>
+                    <input type="mail"/>
+                </li>
+                <li><a href="#" class="button big green">注册</a>
+                </li>
+            </ul>
+        </article>
+    </section>
+    <aside id="profile-aside" class="scrollable">
+        <div>
+        <div class="title"><a href="#login" data-target="section">Usename or login</a></div>
+        <a href="#myswap" data-target="section" data-icon="basket" data-count="15">我的宝贝</a>
+        <a href="#lists" data-target="section" data-icon="heart" data-count="5">我的收藏</a>
+        <a href="#buttons" data-target="article" data-icon="refresh" data-count="14">我的交换</a>
+        <a href="#buttons" data-target="article" data-icon="pushpin" data-count="14">附近</a>
+        <a href="#events" data-target="article" data-icon="question">帮助</a>
+        </div>
+    </aside>
+
+
+
+    <!-- LungoJS (Production mode) -->
+    <script src="lungo.js/lungo-1.2.js"></script>
+    <!-- LungoJS - Sandbox App -->
+    <script src="app/app.js"></script>
+    <script src="app/data.js"></script>
+    <script src="app/events.js"></script>
+    <script src="app/services.js"></script>
+    <script src="app/view.js"></script>
+</body>
+</html>
