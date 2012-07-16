@@ -21,30 +21,39 @@
     <link rel="stylesheet" href="./lungo.js/lungo-1.2.css">
     <link rel="stylesheet" href="./lungo.js/lungo.theme.default.css">
     <style type="text/css">
+.hide{
+display:none;
+}
+.show{
+display:block;
+}
         .scroll-demo {
         background: #ccc;
-        margin: 10px;
+        margin: 0px;
         overflow: hidden;
     }
 
     .scroll-demo.horizontal {
-        height: 68px;
+        height: 200px;
         width: inherit;
         display: block;
     }
 
-    .scroll-demo.vertical {
-        top: 72px;
-        width: 72px;
-        height: 196px;
-    }
-
-    .scroll-demo span {
-        height: 64px;
-        width: 64px;
+    .scroll-demo img {
+        height: 190px;
+        width:194px;
         background: #666;
         text-align: center;
-        line-height: 64px;
+        line-height: 190px;
+        display: inline-block;
+        margin: 2px 0px 0px 2px;
+    }
+.scroll-demo span {
+        height: 190px;
+        width:60px;
+        background: #666;
+        text-align: center;
+        line-height: 190px;
         display: inline-block;
         margin: 2px 0px 0px 2px;
     }
@@ -52,7 +61,8 @@
 </head>
 
 <body class="app">
-    <section id="main">
+
+    <section id="main" class="scrollable aside">
         <header data-title="换多多" class="extended">
 
             <a href="#profile-aside" data-target="aside" data-icon="items" class="button onleft"></a>
@@ -60,47 +70,39 @@
             <a href="#add" data-target="section" data-icon="plus" class="button onright"></a>
             <nav class="groupbar">
                 <a href="#latest" data-target="article" class="current">最新上传</a>
-                <a href="#popular" data-target="article" >最受欢迎</a>
+                <a href="#popular" data-target="article">最受欢迎</a>
             </nav>
         </header>
         <!--
             List of offes
         -->
+
         <article id="latest" class="list scrollable">
-            <ul>
-                <li class=selectable>
-                    <a href="#detail" data-target="section" ><img src="http://lungojs.tapquo.com/assets/images/avatars/1.jpg">
-                    <strong>meow</strong>
-                    <small>anymeow</small></a>
-                </li>
-                <li class=selectable>
-                    <img src="http://lungojs.tapquo.com/assets/images/avatars/1.jpg">
-                    <strong>meow</strong>
-                    <small>anymeow</small>
-                </li>
-            </ul>
+          <div>
+            <script type="text/x-handlebars">
+              {{#collection Hdd.OfferView }}
+              {{#with content}}
+             <a href="#detail" data-target="section" >
+              <img {{bindAttr src="image"}}/>
+              <strong>{{short_description}}</strong>  
+              <div class="onright">{{offered_time}}</div>
+              <small>{{user.username}}</small>
+              </a>
+              {{/with}}
+              {{/collection}}
+            </script>
+          </div>
         </article>
 
-        <article id="popular" class="list">
-            <ul>
-                <li>
-                    <img src="http://lungojs.tapquo.com/assets/images/avatars/1.jpg">
-                    <strong>meow</strong>
-                    <small>anymeow</small>
-                </li>
-                <li>
-                    <img src="http://lungojs.tapquo.com/assets/images/avatars/1.jpg">
-                    <strong>meow</strong>
-                    <small>anymeow</small>
-                </li>
-            </ul>
+        <article id="popular" class="list scrollable">
+            
         </article>
-        
+       
     </section>
     
     <section id="add">
         <header data-back="home" data-title="添加宝贝"></header>
-        <article class="list">
+        <article id="add-form" class="list scrollable ">
             
             <div class="container indented">
 
@@ -109,7 +111,26 @@
                     <label>标题*</label>
                     <input type="text" placeholder="简单描述"/>
                 </li>
-                <li class="anchor" data-icon="edit">类目</li>
+                <scroll id="offer-image-scrollasdf" class="scroll-demo horizontal">
+                <div style="width: 1036px;">
+                    
+                    <span>2</span>
+                    <span>3</span>
+                    <span>4</span>
+                    <span>5</span>
+                    <span>6</span>
+                    <span>7</span>
+                    <span>8</span>
+                    <span>9</span>
+                    <span>10</span>
+                    <span>11</span>
+                    <span>12</span>
+                    <span>13</span>
+                    <span>14</span>
+                    <span>15</span>
+                </div>
+</scroll>
+                <li class="anchor" data-icon="edit" >类目</li>
                 <li>
 
                     <label class=select>
@@ -130,25 +151,8 @@
                 <li class=anchor>想换</li>
                  <li>   <textarea placeholder="理想宝贝"></textarea></li>
             </ul>
-            </div>
-            <div id="offer-image-scroll" class="scroll-demo scrollable horizontal">
-                <div style="width: 1036px;">
-                    
-                    <span>2</span>
-                    <span>3</span>
-                    <span>4</span>
-                    <span>5</span>
-                    <span>6</span>
-                    <span>7</span>
-                    <span>8</span>
-                    <span>9</span>
-                    <span>10</span>
-                    <span>11</span>
-                    <span>12</span>
-                    <span>13</span>
-                    <span>14</span>
-                    <span>15</span>
-                </div>
+            
+            
             </div>
         </article>
         <footer>
@@ -165,48 +169,43 @@
 
     <section id="detail">
         <header data-back="home" data-title="宝贝详情"></header>
-        <article class="list">
+        <article id="aticle-detail"  class="list scrollable">
             
             <div class="container indented">
+              
+              <script type="text/x-handlebars">
+                {{#view Hdd.DetailView}}
+              
+                <ul class="form">
+                  <li>
+                    <label><big><b>{{currentItem.short_description}}</b></big></label>
+                  </li>
+                  {{#if currentItem.images.length}}
+                  <scroll id="offer-image-scroll2" class="scroll-demo horizontal">
+                      <div {{bindAttr style="imageScrollWidth"}}>
+                        
+                        {{#each currentItem.images}}
+                        <img {{bindAttr src="image"}} class="" alt="" />
+                        {{/each}}
+                      </div>
+                    </scroll>
+                  {{/if}}
+                </ul>
+                {{#with currentItem}}
+                <ul class="form">
+                  <li class="anchor" data-icon="edit">详情</li>
+                  <li>{{{offering}}}</li>
+                  
+                </ul>
 
-            <ul class="form">
-                <li>
-
-                    <label><b>标题</b></label>
-
-                </li>
-            </ul>
-            <ul class="form">
-                <li class="anchor" data-icon="edit">详情</li>
-                <li>喵咪是是屎屎</li>
-                    
-            </ul>
-
-            <ul class="form">
-                <li class=anchor>想换</li>
-                 <li> 喵咪是是屎屎</li>
-            </ul>
-            </div>
-            <div id="offer-image-scroll2" class="scroll-demo scrollable horizontal">
-                <div style="width: 1036px;">
-                    <span>1</span>
-                    <span>2</span>
-                    <span>3</span>
-                    <span>4</span>
-                    <span>5</span>
-                    <span>6</span>
-                    <span>7</span>
-                    <span>8</span>
-                    <span>9</span>
-                    <span>10</span>
-                    <span>11</span>
-                    <span>12</span>
-                    <span>13</span>
-                    <span>14</span>
-                    <span>15</span>
-                </div>
-            </div>
-
+                <ul class="form">
+                  <li class=anchor>想换</li>
+                  <li> {{{want}}}</li>
+                </ul>
+                {{/with}}
+                
+                {{/view}}
+              </script>
         </article>
         <footer>
 
@@ -219,7 +218,7 @@
 
     <section id="myswap">
         <header data-title="我的宝贝" class="extended" data-back="home">
-            <a href="#add" data-target="section" data-icon="plus" class="button onright"></a>
+            <a href="#add" data-target="section" data-icon="plus" class="pop  button onright"></a>
             <nav class="groupbar">
                 <a href="#latest" data-target="article" class="current">最新上传</a>
                 <a href="#popular" data-target="article" >与我交换</a>
@@ -231,7 +230,7 @@
         <!--
             List of offes
         -->
-        <article id="latest" class="list scrollable">
+        <article id="latestswap" class="list scrollable">
             <ul>
                 <li class=selectable>
                     <a href="#detail" data-target="section" ><img src="http://lungojs.tapquo.com/assets/images/avatars/1.jpg">
@@ -246,7 +245,7 @@
             </ul>
         </article>
 
-        <article id="popular" class="list">
+        <article id="popularswap" class="list">
             <ul>
                 <li>
                     <a href="#swapdetail" data-target="section">
@@ -303,18 +302,22 @@
             <a href="#register" class="button onright" data-target="section">注册</a>
         </header>
         <article class=list>
+          <form method="post" id="login-form" action="">
             <ul class=form>
+              <li class="tip error hide"><span class="icon home mini"></span>用户名或密码错误!</li>
                 <li>
                     <label>用户名</label>
-                    <input type="text"/>
+                    <input name="username" type="text"/>
                 </li>
                 <li>
                     <label>密码</label>
-                    <input type="password"/>
+                    <input type="password" name="password"/>
                 </li>
-                <li><a href="#" class="button big green">登陆</a>
+                <li><input type="submit" class="button big green" value="登陆"/>
                 </li>
             </ul>
+          </form>
+            
         </article>
     </section>
     <section id="register">
@@ -340,26 +343,48 @@
             </ul>
         </article>
     </section>
-    <aside id="profile-aside" class="scrollable">
-        <div>
-        <div class="title"><a href="#login" data-target="section">Usename or login</a></div>
-        <a href="#myswap" data-target="section" data-icon="basket" data-count="15">我的宝贝</a>
-        <a href="#lists" data-target="section" data-icon="heart" data-count="5">我的收藏</a>
-        <a href="#buttons" data-target="article" data-icon="refresh" data-count="14">我的交换</a>
-        <a href="#buttons" data-target="article" data-icon="pushpin" data-count="14">附近</a>
-        <a href="#events" data-target="article" data-icon="question">帮助</a>
-        </div>
+    <aside id="profile-aside" class="scrollable current">
+
+<script type="text/x-handlebars">
+
+          {{#view Hdd.SideView }}
+
+          {{#if user}}
+        <div class="title"><a href="#" data-target="section"><span class="icon user"></span>{{user.username}}</a></div>
+        <a href="#myswap" data-target="section" data-icon="basket" data-count="15"><span class="icon basket"> </span> 我的宝贝</a>
+        <a href="#lists" data-target="section" data-icon="heart" data-count="5"><span class="icon refresh"></span>我的收藏</a>
+        <a href="#buttons" data-target="article" data-icon="refresh" data-count="14"><span class="icon refresh"> </span> 我的交换</a>
+        <a href="#buttons" data-target="article" data-icon="pushpin" data-count="14"><span class="icon pushpin"></span> 附近</a>
+        {{else}}
+        <div class="title"><a href="#login" data-target="section"><span class="icon user"> </span> 登陆</a></div>
+        {{/if}}
+         <a href="#events" data-target="article" data-icon="question"><span class="icon question"></span> 帮助</a>
+        {{/view}}
+
+
+</script>
+       
+
+
+  
+
     </aside>
 
 
-
+    <script type="text/javascript" src="jquery-1.7.2.min.js"></script>
     <!-- LungoJS (Production mode) -->
     <script src="lungo.js/lungo-1.2.js"></script>
+    
+    <script type="text/javascript" src="ember-0.9.8.1.js">
+      
+    </script>
+   
     <!-- LungoJS - Sandbox App -->
     <script src="app/app.js"></script>
-    <script src="app/data.js"></script>
-    <script src="app/events.js"></script>
-    <script src="app/services.js"></script>
-    <script src="app/view.js"></script>
+    <!-- <script src="app/data.js"></script> -->
+    <!-- <script src="app/events.js"></script> -->
+    <!-- <script src="app/services.js"></script> -->
+    <!-- <script src="app/view.js"></script> -->
+
 </body>
 </html>
