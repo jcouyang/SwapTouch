@@ -10,13 +10,22 @@ The above copyright notice and this permission notice shall be included in all c
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-var App, HOST, Hdd, ScrollView, lng;
+var API, App, HOST, Hdd, ScrollView, eventBinding, lng, userinfo;
 
 lng = LUNGO;
 
 HOST = "http://127.0.0.1:8000";
 
+API = '/api/v1/';
+
 App = null;
+
+userinfo = {
+  username: '',
+  key: '',
+  login: false,
+  id: ''
+};
 
 ScrollView = Em.View.extend({
   didInsertElement: function() {
@@ -29,40 +38,87 @@ ScrollView = Em.View.extend({
   }
 });
 
+eventBinding = function() {
+  $('#login-form').submit(function(evt) {
+    var form;
+    evt.preventDefault();
+    form = $(this);
+    return $.post(HOST + '/getapi/', $(this).serialize(), function(data) {
+      if (data.login) {
+        lng.Router.back();
+        lng.Data.Storage.persistent('userinfo', data);
+        lng.Data.Cache.set('userinfo', data);
+        return Hdd.checkAuth();
+      } else {
+        return form.find('.error').removeClass('hide');
+      }
+    });
+  });
+  $('#newoffer-btn').click(function() {
+    var data;
+    data = {
+      "category": '',
+      "image": null,
+      "images": [],
+      "like": 0,
+      "offering": "",
+      "state": 1,
+      "tags": "",
+      "user": '/api/v1/user/' + userinfo.id + '/',
+      "want": ""
+    };
+    $.each($('#newoffer-form').serializeArray(), function(i, v) {
+      return data[v.name] = v.value;
+    });
+    data['category'] = '/api/v1/category/' + Hdd.categoriesView.get('selection').id + '/';
+    console.log(data);
+    return Hdd.newOffer(data);
+  });
+  return $('#newswap-btn').click(function() {
+    var data;
+    data = {};
+    data['proposing_offer'] = '/api/v1/offer/' + Hdd.offerSelectView.get('selection').id + '/';
+    data['responding_offer'] = '/api/v1/offer/' + Hdd.offerController.get('currentItem').id + '/';
+    console.log(data);
+    return Hdd.newSwap(data);
+  });
+};
+
 Hdd = Em.Application.create({
   ready: function() {
     this._super();
     this.checkAuth();
     this.getOffers();
+    this.getCategories();
     App = (function(lng) {
       lng.App.init({
         name: 'HuanDuoDuo',
-        version: '1.1'
+        version: '1.0'
       });
       return {};
     })(LUNGO);
-    return $('#login-form').submit(function(evt) {
-      var form;
-      evt.preventDefault();
-      form = $(this);
-      return $.post(HOST + '/getapi/', $(this).serialize(), function(data) {
-        console.log(data);
-        if (data.login) {
-          lng.Router.back();
-          lng.Data.Storage.persistent('userinfo', data);
-          lng.Data.Cache.set('userinfo', data);
-          return Hdd.checkAuth();
-        } else {
-          return form.find('.error').removeClass('hide');
-        }
-      });
-    });
+    Hdd.offerSelectView.appendTo('#swap-select-container');
+    return eventBinding();
   },
   getOffers: function(api) {
     if (!api) {
       api = '/api/v1/offer/?format=json';
     }
-    return $.getJSON(HOST + api, function(data) {
+    return $.getJSON(HOST + api + '&username=' + userinfo.username + '&api_key=' + userinfo.key, function(data) {
+      if (data.objects) {
+        data.objects.forEach(function(item) {
+          item.image = HOST + item.image;
+          item.images.forEach(function(i) {
+            return i.image = HOST + i.image;
+          });
+          return Hdd.offerController.addItem(Hdd.Offer.create(item));
+        });
+        return Hdd.offerController.set('next20', data.meta.next);
+      }
+    });
+  },
+  mySwaps: function() {
+    return $.getJSON(HOST + '/api/v1/swap/?format=json&username=' + userinfo.username + '&api_key=' + userinfo.key, function(data) {
       if (data.objects) {
         data.objects.forEach(function(item) {
           item.image = HOST + item.image;
@@ -76,19 +132,70 @@ Hdd = Em.Application.create({
     });
   },
   checkAuth: function() {
-    var userinfo;
     if (lng.Data.Cache.get('userinfo')) {
       userinfo = LUNGO.Data.Cache.get('userinfo');
       Hdd.userController.set('user', Hdd.User.create(userinfo));
-      return true;
+      return userinfo;
     }
     if (lng.Data.Storage.persistent('userinfo')) {
       userinfo = lng.Data.Storage.persistent('userinfo');
       Hdd.userController.set('user', Hdd.User.create(userinfo));
-      return true;
+      return userinfo;
     }
     return false;
+  },
+  newOffer: function(offer) {
+    return $.ajax({
+      url: HOST + '/api/v1/offer/?username=' + userinfo.username + '&api_key=' + userinfo.key,
+      type: 'POST',
+      contentType: 'application/json',
+      data: JSON.stringify(offer),
+      dataType: 'json',
+      processData: false,
+      statusCode: {
+        401: function() {
+          console.log('login first');
+          return lng.Router.section('login');
+        },
+        201: function() {
+          lng.Router.back();
+          return Hdd.getOffers();
+        }
+      }
+    });
+  },
+  newSwap: function(swap) {
+    return $.ajax({
+      url: HOST + '/api/v1/swap/?username=' + userinfo.username + '&api_key=' + userinfo.key,
+      type: 'POST',
+      contentType: 'application/json',
+      data: JSON.stringify(swap),
+      dataType: 'json',
+      processData: false,
+      statusCode: {
+        401: function() {
+          console.log('login first');
+          return lng.Router.section('login');
+        },
+        201: function() {
+          lng.Router.back();
+          return Hdd.getOffers();
+        }
+      }
+    });
+  },
+  getCategories: function() {
+    return $.getJSON(HOST + '/api/v1/category/', function(data) {
+      Hdd.categoriesView.set('content', data.objects);
+      return Hdd.categoriesView.appendTo('#categories');
+    });
   }
+});
+
+Hdd.categoriesView = Em.Select.create({
+  content: [],
+  optionLabelPath: 'content.name',
+  optionValuePath: 'content.id'
 });
 
 Hdd.User = Em.Object.extend({
@@ -151,6 +258,12 @@ Hdd.offerController = Em.ArrayController.create({
       return item1.like - item2.like;
     });
   }
+});
+
+Hdd.offerSelectView = Em.Select.create({
+  contentBinding: 'Hdd.offerController.content',
+  optionLabelPath: 'content.short_description',
+  optionValuePath: 'content.id'
 });
 
 Hdd.OfferView = Em.CollectionView.extend({

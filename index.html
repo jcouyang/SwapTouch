@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>LungoJS 1.2</title>
+    <title>换多多</title>
     <meta name="description" content="">
     <meta name="author" content="Jichao Ouyang">
     <!-- Mobile viewport optimization http://goo.gl/b9SaQ -->
@@ -105,54 +105,39 @@ display:block;
         <article id="add-form" class="list scrollable ">
             
             <div class="container indented">
-
+              <form method="post" id="newoffer-form" action="">
             <ul class="form">
                 <li>
                     <label>标题*</label>
-                    <input type="text" placeholder="简单描述"/>
+                    <input type="text" name="short_description" placeholder="简单描述"/>
                 </li>
-                <scroll id="offer-image-scrollasdf" class="scroll-demo horizontal">
-                <div style="width: 1036px;">
-                    
-                    <span>2</span>
-                    <span>3</span>
-                    <span>4</span>
-                    <span>5</span>
-                    <span>6</span>
-                    <span>7</span>
-                    <span>8</span>
-                    <span>9</span>
-                    <span>10</span>
-                    <span>11</span>
-                    <span>12</span>
-                    <span>13</span>
-                    <span>14</span>
-                    <span>15</span>
-                </div>
-</scroll>
+               <!--  <scroll id="offer-image-scrollasdf" class="scroll-demo horizontal"> -->
+                
+<!-- </scroll> -->
                 <li class="anchor" data-icon="edit" >类目</li>
                 <li>
 
-                    <label class=select>
-                    <select>
-                        <option>one</option>
-                        <option>two</option>
-                    </select>
+                    <label class=select id="categories">
+                      
+                    <!-- <select> -->
+                    <!--     <option>one</option> -->
+                    <!--     <option>two</option> -->
+                    <!-- </select> -->
                     </label>
                 </li>
             </ul>
             <ul class="form">
                 <li class="anchor" data-icon="edit">详情</li>
-                <li><textarea placeholder="宝贝详情"></textarea></li>
+                <li><textarea name="offering" placeholder="宝贝详情"></textarea></li>
                     
             </ul>
 
             <ul class="form">
                 <li class=anchor>想换</li>
-                 <li>   <textarea placeholder="理想宝贝"></textarea></li>
+                 <li>   <textarea name="want" placeholder="理想宝贝"></textarea></li>
             </ul>
             
-            
+            </form>
             </div>
         </article>
         <footer>
@@ -162,7 +147,7 @@ display:block;
                   <a href="#" data-icon="camera"></a>
             </nav>
             <nav class="onright">
-                <a href="#" data-icon="check" class="button green">添加</a>
+                <a href="#" data-icon="check" id="newoffer-btn" class="button green">添加</a>
             </nav>
         </footer>
     </section>
@@ -211,7 +196,7 @@ display:block;
 
             <nav class="onright">
                 <a href="#" data-icon="edit" class="button green">编辑</a>
-                <a href="#" data-icon="check" class="button green">想换</a>
+                <a href="#proposeSwap" data-target="section" data-icon="check" class="button green">想换</a>
             </nav>
         </footer>
     </section>
@@ -262,7 +247,28 @@ display:block;
             </ul>
         </article>
     </section>
+    <section id="proposeSwap">
+        <header data-back="home" data-title="请求交换"></header>
+        <article id="proposeSwap-article"  class="list scrollable">
+            
+            <div class="container indented" >
+              <ul class="form">
+                <li class="anchor" data-icon="edit">选择一个您的宝贝来交换</li>
+                <li id="swap-select-container">
+                
+                </li>
+                <li class="anchor" data-icon="edit">没有?请新建</li>
+                
+                </ul>
+              </div>
+        </article>
+        <footer>
 
+            <nav class="onright">
+              <a href="#" data-icon="check" id="newswap-btn" class="button green">确定</a>
+            </nav>
+        </footer>
+    </section>
     <section id="swapdetail">
         <header data-back="home" data-title="详情"></header>
         <article class="list">
@@ -270,6 +276,7 @@ display:block;
             <div class="container indented">
 
             <ul class="form">
+              
                 <li>
 
                     <label><b>标题</b></label>
