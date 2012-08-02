@@ -111,23 +111,18 @@ Hdd = Em.Application.create({
           item.images.forEach(function(i) {
             return i.image = HOST + i.image;
           });
-          return Hdd.offerController.addItem(Hdd.Offer.create(item));
+          return Hdd.offerDataController.addItem(Hdd.Offer.create(item));
         });
-        return Hdd.offerController.set('next20', data.meta.next);
+        return Hdd.offerController.showDefult();
       }
     });
   },
   mySwaps: function() {
     return $.getJSON(HOST + '/api/v1/swap/?format=json&username=' + userinfo.username + '&api_key=' + userinfo.key, function(data) {
       if (data.objects) {
-        data.objects.forEach(function(item) {
-          item.image = HOST + item.image;
-          item.images.forEach(function(i) {
-            return i.image = HOST + i.image;
-          });
-          return Hdd.offerController.addItem(Hdd.Offer.create(item));
+        return data.objects.forEach(function(item) {
+          return Hdd.swapController.addItem(Hdd.Swap.create(item));
         });
-        return Hdd.offerController.set('next20', data.meta.next);
       }
     });
   },
@@ -208,7 +203,10 @@ Hdd.userController = Em.Object.create({
 });
 
 Hdd.SideView = ScrollView.extend({
-  userBinding: 'Hdd.userController.user'
+  userBinding: 'Hdd.userController.user',
+  myswap: function() {
+    return Hdd.offerController.filterBy('username', userinfo.username);
+  }
 });
 
 Hdd.Offer = Em.Object.extend({
@@ -221,14 +219,28 @@ Hdd.Offer = Em.Object.extend({
   image: null,
   images: null,
   like: 0,
-  user: null,
-  offered_time: null
+  offerer: null,
+  offered_time: null,
+  username: (function() {
+    var _ref;
+    return (_ref = this.get('offerer')) != null ? _ref.username : void 0;
+  }).property('offerer')
 });
 
-Hdd.offerController = Em.ArrayController.create({
+Hdd.Swap = Em.Object.extend({
+  proposing_offer: null,
+  responding_offer: null,
+  state: null,
+  proposing_offerer: (function() {
+    return this.get('proposing_offer').offerer.username;
+  }).property('proposing_offer'),
+  responding_offerer: (function() {
+    return this.get('responding_offer').offerer.username;
+  }).property('responding_offer')
+});
+
+Hdd.DataController = Em.ArrayController.extend({
   content: [],
-  next20: null,
-  currentItem: null,
   addItem: function(item) {
     var exists;
     exists = this.filterProperty('id', item.id).length;
@@ -238,11 +250,28 @@ Hdd.offerController = Em.ArrayController.create({
     } else {
       return false;
     }
+  }
+});
+
+Hdd.swapDataController = Hdd.DataController.create();
+
+Hdd.offerDataController = Hdd.DataController.create();
+
+Hdd.offerController = Em.ArrayController.create({
+  content: [],
+  next20: null,
+  currentItem: null,
+  clearFilter: function() {
+    return this.set('content', Hdd.offerDataController.get('content'));
+  },
+  filterBy: function(key, value) {
+    return this.set('content', Hdd.offerDataController.filterProperty(key, value));
   },
   itemCount: (function() {
     return this.get('length');
   }).property('@each'),
   showDefult: function() {
+    this.clearFilter();
     return this.get('content').sort(function(item1, item2) {
       console.log(item1.offered_time, item2.offered_time);
       if (item1.offered_time > item2.offered_time) {
@@ -257,6 +286,30 @@ Hdd.offerController = Em.ArrayController.create({
     return this.get('content').sort(function(item1, item2) {
       return item1.like - item2.like;
     });
+  },
+  showMyOffer: function() {
+    return this.filterBy('username', userinfo.username);
+  }
+});
+
+Hdd.swapController = Em.ArrayController.create({
+  content: [],
+  offerBinding: Em.Binding.oneWay('Hdd.offerController.content'),
+  currentItem: null,
+  clearFilter: function() {
+    return this.set('content', Hdd.swapDataController.get('content'));
+  },
+  filterBy: function(key, value) {
+    return this.set('content', Hdd.swapDataController.filterProperty(key, value));
+  },
+  itemCount: (function() {
+    return this.get('length');
+  }).property('@each'),
+  proposeSwap: function() {
+    return this.filterBy('proposing_offerer', userinfo.username);
+  },
+  respondingSwap: function() {
+    return this.filterBy('proposing_offerer', userinfo.username);
   }
 });
 
@@ -277,6 +330,28 @@ Hdd.OfferView = Em.CollectionView.extend({
       return console.log(this.get('content'));
     }
   })
+});
+
+Hdd.SwapView = Em.CollectionView.extend({
+  contentBinding: 'Hdd.swapController.content',
+  tagName: 'ul',
+  itemViewClass: ScrollView.extend({
+    className: ['selectable'],
+    tagName: 'li',
+    click: function() {
+      return Hdd.swapController.set('currentItem', this.get('content'));
+    }
+  })
+});
+
+Hdd.SwapDetailView = ScrollView.extend({
+  currentItemBinding: 'Hdd.swapController.currentItem',
+  accept: function() {
+    return console.log('accepted');
+  },
+  decline: function() {
+    return console.log('decline');
+  }
 });
 
 Hdd.DetailView = ScrollView.extend({

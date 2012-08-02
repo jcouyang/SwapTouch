@@ -86,7 +86,7 @@ display:block;
               <img {{bindAttr src="image"}}/>
               <strong>{{short_description}}</strong>  
               <div class="onright">{{offered_time}}</div>
-              <small>{{user.username}}</small>
+              <small>{{offerer.username}}</small>
               </a>
               {{/with}}
               {{/collection}}
@@ -205,7 +205,7 @@ display:block;
         <header data-title="我的宝贝" class="extended" data-back="home">
             <a href="#add" data-target="section" data-icon="plus" class="pop  button onright"></a>
             <nav class="groupbar">
-                <a href="#latest" data-target="article" class="current">最新上传</a>
+                <a href="#myoffer" data-target="article" class="current">最新上传</a>
                 <a href="#popular" data-target="article" >与我交换</a>
                 <a href="#popular" data-target="article" >我的交换</a>
                 <a href="#popular" data-target="article" >成功</a>
@@ -215,22 +215,22 @@ display:block;
         <!--
             List of offes
         -->
-        <article id="latestswap" class="list scrollable">
-            <ul>
-                <li class=selectable>
-                    <a href="#detail" data-target="section" ><img src="http://lungojs.tapquo.com/assets/images/avatars/1.jpg">
-                    <strong>meow</strong>
-                    <small>anymeow</small></a>
-                </li>
-                <li class=selectable>
-                    <img src="http://lungojs.tapquo.com/assets/images/avatars/1.jpg">
-                    <strong>meow</strong>
-                    <small>anymeow</small>
-                </li>
-            </ul>
+        <article id="myoffer" class="list scrollable">
+          <!-- <script type="text/x-handlebars"> -->
+          <!--     {{#collection Hdd.OfferView }} -->
+          <!--     {{#with content}} -->
+          <!--    <a href="#detail" data-target="section" > -->
+          <!--     <img {{bindAttr src="image"}}/> -->
+          <!--     <strong>{{short_description}}</strong>   -->
+          <!--     <div class="onright">{{offered_time}}</div> -->
+          <!--     <small>{{offerer.username}}</small> -->
+          <!--     </a> -->
+          <!--     {{/with}} -->
+          <!--     {{/collection}} -->
+          <!--   </script> -->
         </article>
 
-        <article id="popularswap" class="list">
+        <article id="responding-swap" class="list">
             <ul>
                 <li>
                     <a href="#swapdetail" data-target="section">
@@ -358,7 +358,7 @@ display:block;
 
           {{#if user}}
         <div class="title"><a href="#" data-target="section"><span class="icon user"></span>{{user.username}}</a></div>
-        <a href="#myswap" data-target="section" data-icon="basket" data-count="15"><span class="icon basket"> </span> 我的宝贝</a>
+        <a href="#myswap" id="a-myswap" {{action "myswap" on="click"}} data-target="section" data-icon="basket" data-count="15"><span class="icon basket"> </span> 我的宝贝</a>
         <a href="#lists" data-target="section" data-icon="heart" data-count="5"><span class="icon refresh"></span>我的收藏</a>
         <a href="#buttons" data-target="article" data-icon="refresh" data-count="14"><span class="icon refresh"> </span> 我的交换</a>
         <a href="#buttons" data-target="article" data-icon="pushpin" data-count="14"><span class="icon pushpin"></span> 附近</a>
