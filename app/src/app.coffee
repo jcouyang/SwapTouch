@@ -58,6 +58,7 @@ Hdd = Em.Application.create
     @_super()
     @checkAuth()
     @getOffers()
+    @mySwaps()
     @getCategories()
     
     App=((lng) ->
@@ -84,9 +85,9 @@ Hdd = Em.Application.create
     $.getJSON HOST+'/api/v1/swap/?format=json&username='+userinfo.username+'&api_key='+userinfo.key,(data)->
       if data.objects
         data.objects.forEach (item)->
-          Hdd.swapController.addItem Hdd.Swap.create item
+          Hdd.swapDataController.addItem Hdd.Swap.create item
         # Hdd.offerController.set 'next20', data.meta.next
-        
+        Hdd.swapController.clearFilter()
   checkAuth:->
     if lng.Data.Cache.get('userinfo')
       userinfo= LUNGO.Data.Cache.get('userinfo')
@@ -153,7 +154,7 @@ Hdd.userController = Em.Object.create
 Hdd.SideView = ScrollView.extend
   userBinding:'Hdd.userController.user'
   myswap:->
-    Hdd.offerController.filterBy 'username',userinfo.username
+    Hdd.myOfferController.filterBy 'username',userinfo.username
   
 Hdd.Offer = Em.Object.extend
   short_description:null
@@ -184,7 +185,7 @@ Hdd.Swap = Em.Object.extend
   ).property 'responding_offer'
   
 Hdd.DataController = Em.ArrayController.extend
-  content:[]
+  
   addItem:(item) ->
     exists = @filterProperty('id',item.id).length
     if exists is 0
@@ -193,9 +194,13 @@ Hdd.DataController = Em.ArrayController.extend
     else
       return false
 
-Hdd.swapDataController = Hdd.DataController.create()
 
-Hdd.offerDataController = Hdd.DataController.create()
+
+Hdd.offerDataController = Hdd.DataController.create
+  content:[]
+
+Hdd.swapDataController = Hdd.DataController.create
+  content:[]
 
 Hdd.offerController = Em.ArrayController.create
   content:[]
@@ -226,6 +231,10 @@ Hdd.offerController = Em.ArrayController.create
   showMyOffer:->
     @filterBy 'username', userinfo.username
 
+Hdd.myOfferController = Em.ArrayController.create
+  contentBinding:Em.Binding.oneWay 'Hdd.offerController.content'
+  filterBy: (key,value)->
+    @set 'content', @filterProperty key,value
 
 Hdd.swapController = Em.ArrayController.create
   content:[]
@@ -244,9 +253,7 @@ Hdd.swapController = Em.ArrayController.create
     @filterBy('proposing_offerer',userinfo.username)
 
   respondingSwap:->
-    @filterBy('proposing_offerer',userinfo.username)
-
-  
+    @filterBy('responding_offerer',userinfo.username)
 
 Hdd.offerSelectView = Em.Select.create
   contentBinding:'Hdd.offerController.content'
@@ -254,6 +261,7 @@ Hdd.offerSelectView = Em.Select.create
   optionValuePath:'content.id'
   
 Hdd.OfferView = Em.CollectionView.extend
+ 
   contentBinding:'Hdd.offerController.content'
   tagName:'ul'
   itemViewClass:ScrollView.extend
@@ -263,6 +271,16 @@ Hdd.OfferView = Em.CollectionView.extend
       Hdd.offerController.set 'currentItem', @get 'content'
       console.log @get 'content'
 
+Hdd.MyOfferView = Em.CollectionView.extend
+  contentBinding: Em.Binding.oneWay 'Hdd.myOfferController.content'
+  tagName:'ul'
+  itemViewClass:ScrollView.extend
+    classNames:['selectable']
+    tagName:'li'
+    click:->
+      Hdd.offerController.set 'currentItem', @get 'content'
+      console.log @get 'content'
+    
 Hdd.SwapView = Em.CollectionView.extend
   contentBinding: 'Hdd.swapController.content'
   tagName:'ul'

@@ -206,8 +206,8 @@ display:block;
             <a href="#add" data-target="section" data-icon="plus" class="pop  button onright"></a>
             <nav class="groupbar">
                 <a href="#myoffer" data-target="article" class="current">最新上传</a>
-                <a href="#popular" data-target="article" >与我交换</a>
-                <a href="#popular" data-target="article" >我的交换</a>
+                <a href="#responding-swap" data-target="article"  onclick="javascript:Hdd.swapController.respondingSwap();">与我交换</a>
+                <a href="#proposing-swap" data-target="article" onclick="javascript:Hdd.swapController.proposeSwap();">我的交换</a>
                 <a href="#popular" data-target="article" >成功</a>
                 <a href="#popular" data-target="article" >失败</a>
             </nav>
@@ -216,35 +216,47 @@ display:block;
             List of offes
         -->
         <article id="myoffer" class="list scrollable">
-          <!-- <script type="text/x-handlebars"> -->
-          <!--     {{#collection Hdd.OfferView }} -->
-          <!--     {{#with content}} -->
-          <!--    <a href="#detail" data-target="section" > -->
-          <!--     <img {{bindAttr src="image"}}/> -->
-          <!--     <strong>{{short_description}}</strong>   -->
-          <!--     <div class="onright">{{offered_time}}</div> -->
-          <!--     <small>{{offerer.username}}</small> -->
-          <!--     </a> -->
-          <!--     {{/with}} -->
-          <!--     {{/collection}} -->
-          <!--   </script> -->
+          <script type="text/x-handlebars">
+              {{#collection Hdd.MyOfferView }}
+              {{#with content}}
+             <a href="#detail" data-target="section" >
+              <img {{bindAttr src="image"}}/>
+              <strong>{{short_description}}</strong>
+              <div class="onright">{{offered_time}}</div>
+              <small>{{offerer.username}}</small>
+              </a>
+              {{/with}}
+              {{/collection}}
+            </script>
         </article>
 
-        <article id="responding-swap" class="list">
-            <ul>
-                <li>
-                    <a href="#swapdetail" data-target="section">
-                    <img src="http://lungojs.tapquo.com/assets/images/avatars/1.jpg">
-                    <strong>meow</strong>
-                    <small>anymeow</small>
-                    </a>
-                </li>
-                <li>
-                    <img src="http://lungojs.tapquo.com/assets/images/avatars/1.jpg">
-                    <strong>meow</strong>
-                    <small>anymeow</small>
-                </li>
-            </ul>
+        <article id="responding-swap" class="list scrollable">
+            <script type="text/x-handlebars">
+              {{#collection Hdd.SwapView }}
+              {{#with content}}
+             <a href="#detail" data-target="section" >
+              <!-- <img {{bindAttr src="image"}}/> -->
+              <strong>{{proposing_offer.short_description}} {{responding_offer.short_description}}</strong>
+              <div class="onright">{{offered_time}}</div>
+              <!-- <small>{{offerer.username}}</small> -->
+              </a>
+              {{/with}}
+              {{/collection}}
+            </script>
+        </article>
+<article id="proposing-swap" class="list scrollable">
+            <script type="text/x-handlebars">
+              {{#collection Hdd.SwapView }}
+              {{#with content}}
+             <a href="#detail" data-target="section" >
+              <!-- <img {{bindAttr src="image"}}/> -->
+              <strong>{{proposing_offer.short_description}} {{responding_offer.short_description}}</strong>
+              <div class="onright">{{offered_time}}</div>
+              <!-- <small>{{offerer.username}}</small> -->
+              </a>
+              {{/with}}
+              {{/collection}}
+            </script>
         </article>
     </section>
     <section id="proposeSwap">

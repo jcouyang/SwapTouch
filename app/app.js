@@ -89,6 +89,7 @@ Hdd = Em.Application.create({
     this._super();
     this.checkAuth();
     this.getOffers();
+    this.mySwaps();
     this.getCategories();
     App = (function(lng) {
       lng.App.init({
@@ -120,9 +121,10 @@ Hdd = Em.Application.create({
   mySwaps: function() {
     return $.getJSON(HOST + '/api/v1/swap/?format=json&username=' + userinfo.username + '&api_key=' + userinfo.key, function(data) {
       if (data.objects) {
-        return data.objects.forEach(function(item) {
-          return Hdd.swapController.addItem(Hdd.Swap.create(item));
+        data.objects.forEach(function(item) {
+          return Hdd.swapDataController.addItem(Hdd.Swap.create(item));
         });
+        return Hdd.swapController.clearFilter();
       }
     });
   },
@@ -205,7 +207,7 @@ Hdd.userController = Em.Object.create({
 Hdd.SideView = ScrollView.extend({
   userBinding: 'Hdd.userController.user',
   myswap: function() {
-    return Hdd.offerController.filterBy('username', userinfo.username);
+    return Hdd.myOfferController.filterBy('username', userinfo.username);
   }
 });
 
@@ -240,7 +242,6 @@ Hdd.Swap = Em.Object.extend({
 });
 
 Hdd.DataController = Em.ArrayController.extend({
-  content: [],
   addItem: function(item) {
     var exists;
     exists = this.filterProperty('id', item.id).length;
@@ -253,9 +254,13 @@ Hdd.DataController = Em.ArrayController.extend({
   }
 });
 
-Hdd.swapDataController = Hdd.DataController.create();
+Hdd.offerDataController = Hdd.DataController.create({
+  content: []
+});
 
-Hdd.offerDataController = Hdd.DataController.create();
+Hdd.swapDataController = Hdd.DataController.create({
+  content: []
+});
 
 Hdd.offerController = Em.ArrayController.create({
   content: [],
@@ -292,6 +297,13 @@ Hdd.offerController = Em.ArrayController.create({
   }
 });
 
+Hdd.myOfferController = Em.ArrayController.create({
+  contentBinding: Em.Binding.oneWay('Hdd.offerController.content'),
+  filterBy: function(key, value) {
+    return this.set('content', this.filterProperty(key, value));
+  }
+});
+
 Hdd.swapController = Em.ArrayController.create({
   content: [],
   offerBinding: Em.Binding.oneWay('Hdd.offerController.content'),
@@ -309,7 +321,7 @@ Hdd.swapController = Em.ArrayController.create({
     return this.filterBy('proposing_offerer', userinfo.username);
   },
   respondingSwap: function() {
-    return this.filterBy('proposing_offerer', userinfo.username);
+    return this.filterBy('responding_offerer', userinfo.username);
   }
 });
 
@@ -321,6 +333,19 @@ Hdd.offerSelectView = Em.Select.create({
 
 Hdd.OfferView = Em.CollectionView.extend({
   contentBinding: 'Hdd.offerController.content',
+  tagName: 'ul',
+  itemViewClass: ScrollView.extend({
+    classNames: ['selectable'],
+    tagName: 'li',
+    click: function() {
+      Hdd.offerController.set('currentItem', this.get('content'));
+      return console.log(this.get('content'));
+    }
+  })
+});
+
+Hdd.MyOfferView = Em.CollectionView.extend({
+  contentBinding: Em.Binding.oneWay('Hdd.myOfferController.content'),
   tagName: 'ul',
   itemViewClass: ScrollView.extend({
     classNames: ['selectable'],
